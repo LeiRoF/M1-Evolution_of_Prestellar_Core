@@ -4,3 +4,8 @@ docs/_templates/
 docs/make.bat
 docs/Makefile
 .vscode/
+a.exe
+a.out
+constant.mod
+prestel.mod
+results/
