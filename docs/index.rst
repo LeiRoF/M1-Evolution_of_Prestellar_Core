@@ -12,3 +12,4 @@ Evolution of prestellar core - Module documentation
 
    introduction.ipynb
    installation.ipynb
+   physical_description.ipynb
