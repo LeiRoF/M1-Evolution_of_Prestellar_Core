@@ -18,4 +18,4 @@ Evolution of prestellar core - Module documentation
    :maxdepth: 2
    :caption: Available functions
 
-   functions.md
+   subroutines.md
