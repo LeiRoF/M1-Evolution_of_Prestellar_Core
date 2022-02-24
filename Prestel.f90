@@ -10,7 +10,7 @@
    CONTAINS
 
 !===============================================================================
-   subroutine mean_density_1D(shape, mass, N, r, dr, rho) ! OK.
+   subroutine density_1D(shape, mass, N, r, dr, rho) ! OK.
 !===============================================================================
       ! Get gravitational force
 
@@ -39,7 +39,7 @@
 
       rho = shape / tmp * mass
 
-   end subroutine mean_density_1D
+   end subroutine density_1D
 
 !===============================================================================
    subroutine integrate_on_sphere(D, N, r, dr, res) ! OK.

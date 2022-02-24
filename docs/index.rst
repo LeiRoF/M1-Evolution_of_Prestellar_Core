@@ -16,6 +16,6 @@ Evolution of prestellar core - Module documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: Available functions
+   :caption: Available subroutines
 
    subroutines.md
