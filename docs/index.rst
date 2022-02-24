@@ -13,3 +13,9 @@ Evolution of prestellar core - Module documentation
    introduction.ipynb
    installation.ipynb
    physical_description.ipynb
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Available functions
+
+   functions.md

@@ -27,8 +27,8 @@ PROGRAM TEST
    call time_free_fall(rho_m3D, tff)
    call get_cs(Temp, cs)
    
-   call get_space_array(Rmin, Rmax, N, r, dr)
-   call get_space_array(0e0_dp,tff, N, t, dt)
+   call linspace(Rmin, Rmax, N, r, dr)
+   call linspace(0e0_dp,tff, N, t, dt)
 
    print *, " "
    print *, "Mass             = ", mass / Msun, " time the mass of the sun, "
@@ -62,7 +62,7 @@ PROGRAM TEST
    ! __________________________________________________
    ! Computation
 
-   call get_mass(rho(1,:), N, r, dr, mass)
+   call total_mass(rho(1,:), N, r, dr, mass)
 
    print *, " "
    print *, "mass = ", mass/Msun, "*Msun // TO DO (la masse devrait etre proche de 1 masse solaire)"

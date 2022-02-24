@@ -10,7 +10,7 @@
    CONTAINS
 
 !===============================================================================
-   subroutine get_1D_mean_density(shape, mass, N, r, dr, rho) ! OK.
+   subroutine mean_density_1D(shape, mass, N, r, dr, rho) ! OK.
 !===============================================================================
       ! Get gravitational force
 
@@ -39,7 +39,7 @@
 
       rho = shape / tmp * mass
 
-   end subroutine get_1D_mean_density
+   end subroutine mean_density_1D
 
 !===============================================================================
    subroutine integrate_on_sphere(D, N, r, dr, res) ! OK.
@@ -71,7 +71,7 @@
    end subroutine integrate_on_sphere
 
 !===============================================================================
-   subroutine get_mass(rho, N, r, dr, mass) ! OK.
+   subroutine total_mass(rho, N, r, dr, res) ! OK.
 !===============================================================================
       ! Get gravitational force
 
@@ -87,7 +87,7 @@
       real (kind=dp)               :: dr   ! space step
 
       ! Outputs
-      real (kind=dp)               :: mass ! total mass considered
+      real (kind=dp)               :: res  ! total mass considered
 
       ! Private
       integer                      :: i    ! index
@@ -95,12 +95,12 @@
       ! __________________________________________________
       ! Instructions
 
-      mass = 4 * pi * sum(rho * r**2 * dr)  ! integral on a sphere of rho
+      call integrate_on_sphere(rho,N,r,dr,res)
 
-   end subroutine get_mass
+   end subroutine total_mass
 
 !===============================================================================
-   subroutine get_grav_force(rho, N, r, dr, dphi)
+   subroutine grav_force(rho, N, r, dr, dphi)
 !===============================================================================
       ! Get gravitational force
 
@@ -129,10 +129,10 @@
       call integrate_on_sphere(rho, N, r, dr, tmp)
       dphi = 4 * pi * G * tmp ! 3D
 
-   end subroutine get_grav_force
+   end subroutine grav_force
 
 !===============================================================================
-   subroutine get_cs(T, cs) ! OK.
+   subroutine get_cs(T, res) ! OK.
 !===============================================================================
       ! Get isothermal speed of sound
 
@@ -142,20 +142,20 @@
       ! Declarations
 
       ! Inputs
-      real (kind=dp) :: T  ! temprature [K]
+      real (kind=dp) :: T   ! temprature [K]
 
       ! Outputs
-      real (kind=dp) :: cs ! isothermal speed of sound
+      real (kind=dp) :: res ! isothermal speed of sound
 
       ! __________________________________________________
       ! Instructions
 
-      cs = sqrt(kb * T / (mu * mH))
+      res = sqrt(kb * T / (mu * mH))
 
    end subroutine get_cs
 
 !===============================================================================
-   subroutine get_space_array(rmin, rmax, N, res, dr) ! OK.
+   subroutine linspace(rmin, rmax, N, res, dr) ! OK.
 !===============================================================================
       ! Get a space representation in an array
 
@@ -185,7 +185,7 @@
          res(i) = rmin + (i-1)*dr
       end do
 
-   end subroutine get_space_array
+   end subroutine linspace
 
 !===============================================================================
    subroutine next_state(rho, v, r, N, dr, dt, cs, new_rho, new_v)
@@ -285,7 +285,7 @@
       call derive(v, dr, N, tmp1)
       call derive(rho, dr, N, tmp2)
       
-      call get_grav_force(rho,N,r,dr,tmp3)
+      call grav_force(rho,N,r,dr,tmp3)
 
       res = v + (-v * tmp1 - (cs**2/rho) * tmp2 - tmp3) * dt
 
