@@ -42,22 +42,24 @@ PROGRAM TEST
    ! __________________________________________________
    ! Distribution of mass in the gas cloud
 
-   ! sigma = N / 2
-   ! do i = 1, N
-   !    distrib(i) = 1/(sqrt(2*pi) * sigma) * exp(-(i-1)**2/(2*sigma**2)) ! Gaussian distribution
-   ! end do
+   sigma = N / 2
+   do i = 1, N
+      !distrib(i) = 1/(sqrt(2*pi) * sigma) * exp(-((i-1)-N/2)**2/(2*sigma**2)) ! Gaussian distribution
+      distrib(i) = 1
+   end do
 
-   ! call integrate_on_sphere(D,N,r,dr,avd1D)
+   !call integrate_on_sphere(D,N,r,dr,avd1D)
+
+   call density_1D(distrib, mass, N, r, dr, rho(1,:))
 
    ! __________________________________________________
    ! Initial vectors
-   
-   ! call get_density_distrib(distrib, mass, N, r, dr, rho(1,:))
    
    do i = 1,N
       v(1,i) = 0
       rho(1,i) = 1 !rho_m3D
    end do
+
 
    ! __________________________________________________
    ! Computation
@@ -87,6 +89,7 @@ PROGRAM TEST
    open (unit = 41, file = "results/v.dat")
    write(41,*) v(1,:)
 
+   !v(1,:) = r
    do i=2,N
       call next_v(v(i-1,:), rho(i-1,:), r, N, dr, dt, cs, v(i,:))
       call next_rho(rho(i-1,:), v(i-1,:), r, N, dr, dt, rho(i,:))
