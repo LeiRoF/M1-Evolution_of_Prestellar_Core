@@ -10,7 +10,7 @@
    CONTAINS
 
 !===============================================================================
-   subroutine get_density_distrib(shape, mass, N, r, dr, rho) ! OK.
+   subroutine get_1D_mean_density(shape, mass, N, r, dr, rho) ! OK.
 !===============================================================================
       ! Get gravitational force
 
@@ -39,7 +39,7 @@
 
       rho = shape / tmp * mass
 
-   end subroutine get_density_distrib
+   end subroutine get_1D_mean_density
 
 !===============================================================================
    subroutine integrate_on_sphere(D, N, r, dr, res) ! OK.
@@ -100,7 +100,7 @@
    end subroutine get_mass
 
 !===============================================================================
-   subroutine get_grav_force(rho, N, dr, dphi)
+   subroutine get_grav_force(rho, N, r, dr, dphi)
 !===============================================================================
       ! Get gravitational force
 
@@ -111,16 +111,23 @@
 
       ! Inputs
       real (kind=dp), dimension(N) :: rho  ! density array
+      real (kind=dp), dimension(N) :: r    ! space array
       integer                      :: N    ! array dimension
       real (kind=dp)               :: dr   ! space step
 
       ! Outputs
       real (kind=dp)               :: dphi ! gravitational force
 
+      ! Private
+      real (kind=dp)               :: tmp  ! buffer
+
       ! __________________________________________________
       ! Instructions
 
-      dphi = 4 * pi * G * sum(rho) * dr
+      !dphi = 4 * pi * G * sum(rho) * dr ! 1D
+
+      call integrate_on_sphere(rho, N, r, dr, tmp)
+      dphi = 4 * pi * G * tmp ! 3D
 
    end subroutine get_grav_force
 
@@ -241,7 +248,7 @@
       tmp = r**2 * rho * v
       call derive(tmp, dr, N, tmp)
       
-      res = rho - tmp / r**2 * dt
+      res = rho - ( tmp / r**2 ) * dt
 
    end subroutine next_rho
 
@@ -268,17 +275,19 @@
       real (kind=dp), dimension(N) :: res ! returning speeds           at time i+1
 
       ! Private
-      real (kind=dp), dimension(N) :: tmp1, tmp2, tmp3 ! buffers
-      integer                      :: i   ! index
+      real (kind=dp), dimension(N) :: tmp1, tmp2 ! buffers
+      real (kind=dp)               :: tmp3       ! buffers
+      integer                      :: i          ! index
 
       ! __________________________________________________
       ! Instructions
 
       call derive(v, dr, N, tmp1)
       call derive(rho, dr, N, tmp2)
-      tmp3 = 4 * pi * G * sum(rho) * dr
+      
+      call get_grav_force(rho,N,r,dr,tmp3)
 
-      res = v + (-v * tmp1 - cs**2/rho * tmp2 - tmp3) * dt
+      res = v + (-v * tmp1 - (cs**2/rho) * tmp2 - tmp3) * dt
 
    end subroutine next_v
 
