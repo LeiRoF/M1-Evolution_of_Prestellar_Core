@@ -213,13 +213,13 @@
       ! __________________________________________________
       ! Instructions
 
-      call next_rho(rho, v, r, N, dr, dt, new_rho)
-      call next_v(v, rho, r, N, dr, dt, cs, new_v)
+      call next_density(rho, v, r, N, dr, dt, new_rho)
+      call next_speed(v, rho, r, N, dr, dt, cs, new_v)
 
    end subroutine next_state
 
 !===============================================================================
-   subroutine next_rho(rho, v, r, N, dr, dt, res)
+   subroutine next_density(rho, v, r, N, dr, dt, res)
 !===============================================================================
       ! Get the density array at time i+1
 
@@ -250,10 +250,10 @@
       
       res = rho - ( tmp / r**2 ) * dt
 
-   end subroutine next_rho
+   end subroutine next_density
 
 !===============================================================================
-   subroutine next_v(v, rho, r, N, dr, dt, cs, res)
+   subroutine next_speed(v, rho, r, N, dr, dt, cs, res)
 !===============================================================================
       ! Get the speed array at time i+1
 
@@ -289,7 +289,7 @@
 
       res = v + (-v * tmp1 - (cs**2/rho) * tmp2 - tmp3) * dt
 
-   end subroutine next_v
+   end subroutine next_speed
 
 !===============================================================================
    subroutine derive_at(f, x, dx, N, res) ! OK.
@@ -386,6 +386,83 @@
       t = sqrt(3 * pi / (32 * G * rho_0))
 
    end subroutine time_free_fall
+
+!===============================================================================
+   subroutine density_to_nH(rho,res)
+!===============================================================================
+      ! Get the number of hydrogen particle in a centimeter cube of density rho.
+
+      implicit none
+
+      ! __________________________________________________
+      ! Declarations
+
+      ! Inputs
+      real (kind=dp) :: rho ! density [g.cm-3]
+      
+      ! Ouputs
+      integer        :: res ! number of hydrogen atoms in 1 cm^3 [#.cm-3]
+      
+      ! __________________________________________________
+      ! Instructions
+
+      res = int(rho / mH)
+
+   end subroutine density_to_nH
+
+!===============================================================================
+   subroutine nH_to_density(nH,res)
+!===============================================================================
+      ! Get the desnity from the number of atom per centimeter cube.
+
+      implicit none
+
+      ! __________________________________________________
+      ! Declarations
+
+      ! Inputs
+      integer        :: nH ! density [g.cm-3]
+      
+      ! Ouputs
+      real (kind=dp) :: res   ! number of hydrogen atoms in 1 cm^3 [#.cm-3]
+      
+      ! __________________________________________________
+      ! Instructions
+
+      res = nH * mH
+
+   end subroutine nH_to_density
+
+!===============================================================================
+   subroutine mass_accretion_rate(rho, r, dt, N, M, res)
+!===============================================================================
+      ! Get the derivated function. A function (and it's derivated form) is represented by an array containing discret values of this function.
+
+      implicit none
+
+      ! __________________________________________________
+      ! Declarations
+
+      ! Inputs
+      real (kind=dp), dimension(N,M) :: rho ! density 2D-array in space (first dimension) and time (second dimension)
+      integer                        :: r   ! radius (index of the array)
+      real (kind=dp)                 :: dt  ! step of the time discretisation
+      integer                        :: N   ! size of the first dimension (space)
+      integer                        :: M   ! size of the second dimension (time)
+
+      ! Ouputs
+      real (kind=dp), dimension(M)   :: res   ! mass accretion rate
+
+      ! Private
+      real (kind=dp), dimension(M)   :: tmp   ! buffer
+
+      ! __________________________________________________
+      ! Instructions
+
+      tmp = rho(:,r)
+      call derive(tmp, dt, M, res)
+
+   end subroutine mass_accretion_rate
 
 ! ____________________________________________________________________________________________________
    END MODULE Prestel

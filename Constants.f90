@@ -15,7 +15,7 @@
     REAL (KIND=dp), PUBLIC, PARAMETER :: h_planck = 6.62606876e-27_dp            ! Planck constant     [erg.s]
     REAL (KIND=dp), PUBLIC, PARAMETER :: kb = 1.3806503e-16_dp                   ! Boltzmann constant  [erg.K-1]
     REAL (KIND=dp), PUBLIC, PARAMETER :: NAvogadro = 6.022d23                    ! Avogadro number     [mol-1]
-    REAL (KIND=dp), PUBLIC, PARAMETER :: mH = 1.67262178d-27                     ! Proton mass         [g]
+    REAL (KIND=dp), PUBLIC, PARAMETER :: mH = 1.67262178d-24                     ! Proton mass         [g]
 
     REAL (KIND=dp), PUBLIC, PARAMETER :: G = 6.67408d-8                          !  Gravitational constant [cm3.g-1.s-2]
     REAL (KIND=dp), PUBLIC, PARAMETER :: Msun = 2d33                             !  Mass of the sun [g]

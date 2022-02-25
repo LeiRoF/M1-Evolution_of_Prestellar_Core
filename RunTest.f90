@@ -91,8 +91,8 @@ PROGRAM TEST
 
    !v(1,:) = r
    do i=2,N
-      call next_v(v(i-1,:), rho(i-1,:), r, N, dr, dt, cs, v(i,:))
-      call next_rho(rho(i-1,:), v(i-1,:), r, N, dr, dt, rho(i,:))
+      call next_speed(v(i-1,:), rho(i-1,:), r, N, dr, dt, cs, v(i,:))
+      call next_density(rho(i-1,:), v(i-1,:), r, N, dr, dt, rho(i,:))
       write(40,*) rho(i,:)
       write(41,*) v(i,:)
    end do
