@@ -34,7 +34,7 @@
     REAL (KIND=dp), PUBLIC, PARAMETER :: DEGREE_TO_RADIAN = pi/180d0
 
 !   Astro parameters
-    REAL (KIND=dp), PUBLIC, PARAMETER :: mu = 1.4_dp                            ! Mean particle mass in unit of mH (proton mass)
+    REAL (KIND=dp), PUBLIC, PARAMETER :: mu = 1.4_dp                             ! Mean particle mass in unit of mH (proton mass)
     REAL (KIND=dp), PUBLIC, PARAMETER :: fractal = 0.3_dp                        ! Effective fraction of optical depth in Vis-UV RT, due to fractal structure of the ISM (see Varosi and Dwek 1999) 
 
     END MODULE CONSTANTS

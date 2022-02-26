@@ -19,3 +19,9 @@ Evolution of prestellar core - Module documentation
    :caption: Available subroutines
 
    subroutines.ipynb
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Unitary tests
+
+   tests.ipynb

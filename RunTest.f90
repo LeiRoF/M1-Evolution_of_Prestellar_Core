@@ -2,6 +2,7 @@ PROGRAM TEST
 
    USE Constants
    USE PRESTEL
+   USE UnitaryTests
 
    IMPLICIT NONE
 
@@ -13,6 +14,8 @@ PROGRAM TEST
    real (kind=dp), dimension(N) :: r, distrib, t, buffer
    real (kind=dp), dimension(N,N) :: rho, v
    character(len=1024) :: str_i, filename
+
+   call RunAllUnitaryTests()
    
    print *, " "
    print *, "-------------------------------"

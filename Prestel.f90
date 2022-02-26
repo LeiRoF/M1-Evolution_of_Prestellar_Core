@@ -401,12 +401,12 @@
       real (kind=dp) :: rho ! density [g.cm-3]
       
       ! Ouputs
-      integer        :: res ! number of hydrogen atoms in 1 cm^3 [#.cm-3]
+      real (kind=dp) :: res ! number of hydrogen atoms in 1 cm^3 [#.cm-3]
       
       ! __________________________________________________
       ! Instructions
 
-      res = int(rho / mH)
+      res = rho / mH
 
    end subroutine density_to_nH
 
@@ -421,10 +421,10 @@
       ! Declarations
 
       ! Inputs
-      integer        :: nH ! density [g.cm-3]
+      real (kind=dp) :: nH  ! number of hydrogen atoms in 1 cm^3 [#.cm-3]
       
       ! Ouputs
-      real (kind=dp) :: res   ! number of hydrogen atoms in 1 cm^3 [#.cm-3]
+      real (kind=dp) :: res ! density [g.cm-3]
       
       ! __________________________________________________
       ! Instructions
