@@ -18,6 +18,8 @@ module UnitaryTests
         call test_mass_accretion_rate()
         call test_next_density()
         call test_next_speed()
+        call test_nH_to_density()
+        call test_time_free_fall()
 
     end subroutine RunAllUnitaryTests
 
@@ -200,5 +202,26 @@ module UnitaryTests
         close(40)
     end subroutine test_next_speed
 
+    subroutine test_nH_to_density()
+        real(kind=dp) :: nH = 3.0, res
+
+        call nH_to_density(nH,res)
+
+        open (unit = 40, file = "results/unitary_test/nH_to_density.dat")
+        write(40,*) res
+        close(40)
+
+    end subroutine test_nH_to_density
+
+    subroutine test_time_free_fall()
+    real(kind=dp) :: rho = 7.0, t
+
+    call time_free_fall(rho, t)
+
+    open (unit = 40, file = "results/unitary_test/time_free_fall.dat")
+    write(40,*) t
+    close(40)
+
+    end subroutine test_time_free_fall
 
 end module UnitaryTests
