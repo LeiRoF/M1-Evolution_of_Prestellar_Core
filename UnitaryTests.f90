@@ -16,6 +16,8 @@ module UnitaryTests
         call test_integrate_on_sphere()
         call test_linspace()
         call test_mass_accretion_rate()
+        call test_next_density()
+        call test_next_speed()
 
     end subroutine RunAllUnitaryTests
 
@@ -154,6 +156,49 @@ module UnitaryTests
         close(40)
 
     end subroutine test_mass_accretion_rate
+
+
+    subroutine test_next_density()
+        integer, parameter            :: N = 100
+        integer                       :: i
+        real(kind=dp)                 :: dr, dt=1.0
+        real(kind=dp), dimension(N)   :: r, res, rho, v
+
+        call linspace(0.0_dp, 1.0_dp, N, r, dr)
+        rho = exp(-r)
+        v = sin(r*4*pi)
+
+        call next_density(rho, v, r, N, dr, dt, res)
+
+        open (unit = 40, file = "results/unitary_test/next_density.dat")
+        write(40,*) res
+        close(40)
+
+        open (unit = 40, file = "results/unitary_test/next_density_v.dat")
+        write(40,*) v
+        close(40)
+
+        open (unit = 40, file = "results/unitary_test/next_density_rho.dat")
+        write(40,*) rho
+        close(40)
+    end subroutine test_next_density
+
+    subroutine test_next_speed()
+        integer, parameter            :: N = 100
+        integer                       :: i
+        real(kind=dp)                 :: dr, dt=1.0, cs = 3.0
+        real(kind=dp), dimension(N)   :: r, res, rho, v
+
+        call linspace(0.0_dp, 1.0_dp, N, r, dr)
+        rho = exp(-r)
+        v = sin(r*4*pi)
+
+        call next_speed(v, rho, r, N, dr, dt, cs, res)
+        
+        open (unit = 40, file = "results/unitary_test/next_speed.dat")
+        write(40,*) res
+        close(40)
+    end subroutine test_next_speed
 
 
 end module UnitaryTests
