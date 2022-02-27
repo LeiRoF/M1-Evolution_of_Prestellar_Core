@@ -8,6 +8,8 @@ module UnitaryTests
 
     subroutine RunAllUnitaryTests()
         
+        call test_CFL_condition()
+        call test_courant_number()
         call test_density_1D()
         call test_density_to_nH()
         call test_derive()
@@ -22,6 +24,35 @@ module UnitaryTests
         call test_time_free_fall()
 
     end subroutine RunAllUnitaryTests
+
+    subroutine test_CFL_condition()
+    integer, parameter         :: N=100
+    real(kind=dp)              :: dx = 9., dt = 4.
+    real(kind=dp),dimension(N) :: r, u
+    integer                    :: res
+
+    call linspace(0.0_dp,dx*N,N,r, dx)
+
+    u = exp(-r) * sin(r)
+
+    call CFL_condition(u,N,dt,dx,res)
+
+    open (unit = 40, file = "results/unitary_test/CFL_condition.dat")
+    write(40,*) res
+    close(40)
+
+    end subroutine test_CFL_condition
+
+    subroutine test_courant_number()
+    real(kind=dp) :: u = 65., dx = 9., dt = 4., res
+
+    call courant_number(u,dt,dx,res)
+
+    open (unit = 40, file = "results/unitary_test/courant_number.dat")
+    write(40,*) res
+    close(40)
+
+    end subroutine test_courant_number
 
     subroutine test_density_1D()
 
@@ -171,14 +202,6 @@ module UnitaryTests
         v = sin(r*4*pi)
 
         call next_density(rho, v, r, N, dr, dt, res)
-
-        open (unit = 40, file = "results/unitary_test/next_density.dat")
-        write(40,*) res
-        close(40)
-
-        open (unit = 40, file = "results/unitary_test/next_density_v.dat")
-        write(40,*) v
-        close(40)
 
         open (unit = 40, file = "results/unitary_test/next_density_rho.dat")
         write(40,*) rho

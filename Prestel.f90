@@ -10,6 +10,72 @@
    CONTAINS
 
 !===============================================================================
+   subroutine courant_number(u, dt, dx, res)
+!===============================================================================
+      ! Compute the courant number (cf. CFL condition)
+
+      implicit none
+
+      ! __________________________________________________
+      ! Declarations
+
+      ! Inputs
+      real (kind=dp) :: u   ! magnitude of the velocity
+      real (kind=dp) :: dt  ! time discretisation
+      real (kind=dp) :: dx  ! space discretisation
+
+      ! Outputs
+      real (kind=dp) :: res ! courant number
+
+      ! __________________________________________________
+      ! Instructions
+
+      res = u * dt / dx
+
+   end subroutine courant_number
+
+!===============================================================================
+   subroutine CFL_condition(u, N, dt, dx, res)
+!===============================================================================
+      ! Check 1 if the CFL condition is fullfilled, 0 otherwise
+
+      implicit none
+
+      ! __________________________________________________
+      ! Declarations
+
+      ! Inputs
+      real (kind=dp), dimension(N) :: u   ! array containing magnitude of the velocities
+      integer                      :: N   ! size of the array
+      real (kind=dp)               :: dt  ! time discretisation
+      real (kind=dp)               :: dx  ! space discretisation
+
+      ! Outputs
+      integer                      :: res ! courant number
+
+      ! Private
+      real (kind=dp)               :: tmp1  ! count the sum of the courant numbers
+      real (kind=dp)               :: tmp2  ! buffer
+      integer                      :: i     ! index
+
+      ! __________________________________________________
+      ! Instructions
+
+      tmp1 = 0.
+      do i=1,N
+         call courant_number(u(i), dt, dx, tmp2)
+         tmp1 = tmp1 + tmp2
+      end do
+
+      if (tmp1 <= 1.) then
+         res = 1
+      else
+         res = 0
+      end if
+
+   end subroutine CFL_condition
+
+!===============================================================================
    subroutine density_1D(shape, mass, N, r, dr, rho) ! OK.
 !===============================================================================
       ! Get gravitational force
@@ -240,15 +306,30 @@
       real (kind=dp), dimension(N) :: res ! returning array rho        at time i+1
 
       ! Private
-      real (kind=dp), dimension(N) :: tmp ! buffer
+      real (kind=dp), dimension(N) :: tmp, tmp2 ! buffer
 
       ! __________________________________________________
       ! Instructions
 
+      open (unit = 40, file = "results/unitary_test/next_density_rho.dat")
+      write(40,*) res
+      close(40)
+
+      open (unit = 40, file = "results/unitary_test/next_density_v.dat")
+      write(40,*) v
+      close(40)
+
       tmp = r**2 * rho * v
-      call derive(tmp, dr, N, tmp)
+
+      call derive(tmp, dr, N, tmp2)
+
+      open (unit = 40, file = "results/unitary_test/next_density_res.dat")
+      write(40,*) tmp2
+      close(40)
       
-      res = rho - ( tmp / r**2 ) * dt
+      res = rho - ( tmp2 / r**2 ) * dt
+
+      
 
    end subroutine next_density
 
