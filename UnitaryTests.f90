@@ -12,6 +12,10 @@ module UnitaryTests
         call test_density_to_nH()
         call test_derive()
         call test_get_cs()
+        call test_grav_force()
+        call test_integrate_on_sphere()
+        call test_linspace()
+        call test_mass_accretion_rate()
 
     end subroutine RunAllUnitaryTests
 
@@ -72,5 +76,84 @@ module UnitaryTests
         close(40)
 
     end subroutine test_get_cs
+
+    subroutine test_grav_force()
+        integer, parameter          :: N = 100
+        real(kind=dp)               :: dr, dphi
+        real(kind=dp), dimension(N) :: rho, r
+
+        call linspace(0.0_dp, 1.0_dp, N, r, dr)
+        rho = exp(-r)
+
+        call grav_force(rho, N, r, dr, dphi)
+
+        open (unit = 40, file = "results/unitary_test/grav_force.dat")
+        write(40,*) dphi
+        close(40)
+
+    end subroutine test_grav_force
+
+    subroutine test_integrate_on_sphere()
+        integer, parameter          :: N = 100
+        real(kind=dp)               :: dr, res
+        real(kind=dp), dimension(N) :: D, r
+
+        call linspace(0.0_dp, 5.0_dp, N, r, dr)
+
+        D = exp(-r)
+
+        call integrate_on_sphere(D, N, r, dr, res)
+
+        open (unit = 40, file = "results/unitary_test/integrate_on_sphere.dat")
+        write(40,*) res
+        close(40)
+
+    end subroutine test_integrate_on_sphere
+
+    subroutine test_linspace()
+        integer, parameter          :: N = 100
+        real(kind=dp)               :: dr
+        real(kind=dp), dimension(N) :: r
+
+        call linspace(0.0_dp, 5.0_dp, N, r, dr)
+
+        open (unit = 40, file = "results/unitary_test/linspace.dat")
+        write(40,*) r
+        close(40)
+
+        open (unit = 40, file = "results/unitary_test/linspace_step.dat")
+        write(40,*) dr
+        close(40)
+
+    end subroutine test_linspace
+
+    subroutine test_mass_accretion_rate()
+        integer, parameter            :: N = 100
+        integer                       :: i
+        real(kind=dp)                 :: dr, dt, y
+        real(kind=dp), dimension(N)   :: r, t , res, x
+        real(kind=dp), dimension(N,N) :: rho
+
+        call linspace(0.0_dp, 1.0_dp, N, r, dr)
+        call linspace(0.0_dp, 1.0_dp, N, t, dt)
+
+        do i=1,N
+            x = (r-0.5)*10
+            y = (t(i)-0.5)*10
+            rho(i,:) = (x**2 + y - 11)**2 + (x + y**2 -7)**2
+        end do
+
+        call mass_accretion_rate(rho, 20, dt, N, N, res)
+
+        open (unit = 40, file = "results/unitary_test/mass_accretion_rate_rho.dat")
+        write(40,*) rho
+        close(40)
+
+        open (unit = 40, file = "results/unitary_test/mass_accretion_rate.dat")
+        write(40,*) res
+        close(40)
+
+    end subroutine test_mass_accretion_rate
+
 
 end module UnitaryTests

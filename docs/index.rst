@@ -16,7 +16,7 @@ Evolution of prestellar core - Module documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: Available subroutines
+   :caption: User documentation
 
    subroutines.ipynb
 
